@@ -41,12 +41,20 @@ public class RenderDocumentWithRhino {
 
         simpleScriptContext.getBindings(ScriptContext.ENGINE_SCOPE).put("listOptions", options.keySet().toArray());
         simpleScriptContext.getBindings(ScriptContext.ENGINE_SCOPE).put("options", options);
+        simpleScriptContext.getBindings(ScriptContext.ENGINE_SCOPE).put("content", content);
+
 
         Invocable invocable = (Invocable) engine;
 
         Object eval = engine.eval("Opal.hash2(listOptions, options)", simpleScriptContext);
 
+        simpleScriptContext.getBindings(ScriptContext.ENGINE_SCOPE).put("hash2", eval);
+
+
+
         engine.setContext(simpleScriptContext);
+
+        System.out.println(engine.eval("Opal.Asciidoctor.$render(content, hash2);", simpleScriptContext));
 
         AsciidoctorJs asciidoctorJs =
                 invocable.getInterface(
